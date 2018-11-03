@@ -4,7 +4,7 @@ var err;
 
 var spawner = { run: function(spawn, level) {
     
-    if (Game.time % 10 != 0) {
+    if (Game.time % 20 != 0) {
         return;
     }
 
@@ -337,10 +337,19 @@ var spawner = { run: function(spawn, level) {
         return;
     }
     
-    const opts = { memory: {
-        role: role,
-        spawn: spawn.name,
-    }};
+    const sources = spawn.room.find(FIND_SOURCES);
+    const minerals = spawn.room.find(FIND_MINERALS);
+    let sourcesArray = [sources[0], sources[1], minerals[0]];
+    if (sources.length < 2) {
+        sourcesArray = [sources[0], minerals[0]];
+    }
+    
+    let source = sourcesArray[spawn.memory.counts.harvesters.length].id;
+    let opts = { memory: {
+        role:   role,
+        spawn:  spawn.name,
+        source: source,
+    } };
 
     err = spawn.spawnCreep(body, Game.time, opts);
     if (err == ERR_BUSY || err == ERR_NOT_ENOUGH_ENERGY || err == ERR_NAME_EXISTS) {

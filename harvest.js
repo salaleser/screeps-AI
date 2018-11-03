@@ -11,50 +11,21 @@ var harvest = { run: function(spawn, creep) {
 	} };
 	
 	const sources = creep.room.find(FIND_SOURCES);
-	let sourceNumber = 0;
 
-	const isPolymorph = spawn.memory.counts.carriers.length > 0;
-    
     if (creep.memory.source) {
 
-		if (isPolymorph) {
-			let creeps = _.filter(Game.creeps, (i) => i.memory.spawn == spawn.name);
-			let harvesters = _.filter(creeps, (i) => i.memory.role == 'harvester');
-			for (let i = 0; i < harvesters.length; i++) {
-				if (harvesters[i].name == creep.name) {
-					continue;
-				}
-				if (creep.memory.source != harvesters[i].memory.source) {
-					continue;
-				}
-				if (sources.length > 1) {
-					if (sourceNumber == 0) {
-						sourceNumber = 1;
-					} else {
-						sourceNumber = 0;
-					}
-				// 	console.log(spawn.name, creep.name, sources[sourceNumber].id);
-	                creep.memory.source = sources[sourceNumber].id;
-				// 	return;
-				}
-			}
+		const harvesters = _.filter(Game.creeps, (i) => i.memory.spawn == spawn.name
+			&& i.memory.role == 'harvester'
+			&& i.name != creep.name
+			&& i.memory.source == creep.memory.source);
+		if (harvesters.length > 0 && sources.length > 1) {
+			creep.memory.source = sources[1].id;
 		}
 
 		const source = Game.getObjectById(creep.memory.source);
 		err = creep.harvest(source);
 		if (err == ERR_NOT_IN_RANGE) {
 			err = creep.moveTo(source, harvestStyle);
-			if (err == ERR_NO_PATH || err == ERR_NOT_ENOUGH_RESOURCES) {
-				if (sources.length > 1) {
-					if (sourceNumber == 0) {
-						sourceNumber = 1;
-					} else {
-						sourceNumber = 0;
-					}
-					creep.memory.source = sources[sourceNumber].id;
-					return;
-				}
-			}
 		}
 		if (creep.carry.energy == creep.carryCapacity) {
 			delete creep.memory.source;
@@ -62,7 +33,7 @@ var harvest = { run: function(spawn, creep) {
 		return;
 	}
 
-	creep.memory.source = sources[sourceNumber].id;
+	creep.memory.source = sources[0].id;
     
 }};
 

@@ -7,7 +7,6 @@ var spawner   = require('spawner');
 module.exports.loop = function () {
 	'use strict';
 	
-	let spawnNumber = 0;
 	for (const s in Game.spawns) {
 		const spawn = Game.spawns[s];
 		const m = spawn.memory;
@@ -54,14 +53,18 @@ module.exports.loop = function () {
 			level = 1;
 		}
 		
-		const sources = spawn.room.find(FIND_SOURCES);
-		const sites = spawn.room.find(FIND_MY_CONSTRUCTION_SITES);
-		const allSites = Game.constructionSites;
+		const allSites   = Game.constructionSites;
+		const storage    = spawn.room.storage;
+		const sources    = spawn.room.find(FIND_SOURCES);
 		const structures = spawn.room.find(FIND_STRUCTURES);
+		const sites      = spawn.room.find(FIND_MY_CONSTRUCTION_SITES);
 		const containers = _.filter(structures, (i) => i.structureType == STRUCTURE_CONTAINER);
-		const storage = spawn.room.storage;
+		const extractor  = _.filter(structures, (i) => i.structureType == STRUCTURE_EXTRACTOR);
 		
 		m.limits.harvesters += sources.length;
+		if (extractor.length > 0) {
+			m.limits.harvesters++;
+		}
 
 		if (storage) {
 			m.limits.upgraders += parseInt(storage.store[RESOURCE_ENERGY] / 4000);
@@ -118,8 +121,6 @@ module.exports.loop = function () {
 		visuals.run(spawn, level);
 
 		construct.run(spawn);
-
-		spawnNumber++;
 	}
 	
 	// const linkFrom = Game.rooms['W3S9'].lookForAt('structure', 39, 44)[0];

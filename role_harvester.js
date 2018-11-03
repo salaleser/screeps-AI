@@ -21,7 +21,7 @@ var role_harvester = { run: function(spawn, creep) {
 		opacity: 0.4,
 	} };
     
-    if (creep.carry.energy == creep.carryCapacity) {
+    if (creep.carryCapacity == _.sum(creep.carry)) {
 		creep.memory.full = true;
 	} else if (creep.carry.energy == 0) {
 		creep.memory.full = false;
@@ -33,12 +33,15 @@ var role_harvester = { run: function(spawn, creep) {
 		if (isPolymorph) {
 			const structures = spawn.room.find(FIND_STRUCTURES);
 			const containers = _.filter(structures, (i) => i.structureType == STRUCTURE_CONTAINER);
-			const containersNotFull = _.filter(containers, (i) => i.store[RESOURCE_ENERGY] < i.storeCapacity);
+			const containersNotFull =
+				_.filter(containers, (i) => i.store[RESOURCE_ENERGY] < i.storeCapacity);
 			if (containersNotFull.length > 0) {
-				const o = creep.pos.findClosestByRange(containersNotFull);
-				err = creep.transfer(o, RESOURCE_ENERGY);
-				if (err == ERR_NOT_IN_RANGE) {
-					creep.moveTo(o, pickupStyle);
+				const container = creep.pos.findClosestByRange(containersNotFull);
+				for (const resourceType in creep.carry) {
+					err = creep.transfer(container, resourceType);
+					if (err == ERR_NOT_IN_RANGE) {
+						creep.moveTo(container, transferStyle);
+					}
 				}
 				return;
 			}
@@ -57,7 +60,11 @@ var role_harvester = { run: function(spawn, creep) {
     	}
 	}
 	
-    harvest.run(spawn, creep);
+    const source = Game.getObjectById(creep.memory.source);
+	err = creep.harvest(source);
+	if (err == ERR_NOT_IN_RANGE) {
+		err = creep.moveTo(source, harvestStyle);
+	}
 
 }};
 

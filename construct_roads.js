@@ -28,6 +28,12 @@ var construct_roads= { run: function(spawn) {
     	err = spawn.room.createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
 	}
 	
+	const spawnToExtractorPath = spawn.room.memory.pathExtractor;
+	for (let i = 0; i < spawnToExtractorPath.path.length; i++) {
+	    const pos = spawnToExtractorPath.path[i];
+    	err = spawn.room.createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
+	}
+	
 	if (spawn.room.controller.level > 3) {
 		// TODO construct roads from source0 to source1
 	}

@@ -10,7 +10,7 @@ var unload = { run: function(spawn, creep) {
 		opacity: 0.25,
 	} };
 
-    if (spawn.energy < spawn.energyCapacity) {
+    if (spawn.energy < spawn.energyCapacity && creep.carry[RESOURCE_ENERGY] > 0) {
 		err = creep.transfer(spawn, RESOURCE_ENERGY)
         if (err == ERR_NOT_IN_RANGE) {
 			creep.moveTo(spawn, transferStyle);
@@ -21,7 +21,7 @@ var unload = { run: function(spawn, creep) {
 	
 	const extensions = _.filter(myStructures, (i) => i.structureType == STRUCTURE_EXTENSION);
 	const extensionsNotFull = _.filter(extensions, (i) => i.energy < i.energyCapacity);
-	if (extensionsNotFull.length > 0) {
+	if (extensionsNotFull.length > 0 && creep.carry[RESOURCE_ENERGY] > 0) {
 	    const o = creep.pos.findClosestByRange(extensionsNotFull);
 	    err = creep.transfer(o, RESOURCE_ENERGY);
 	    if (err == ERR_NOT_IN_RANGE) {
@@ -32,7 +32,7 @@ var unload = { run: function(spawn, creep) {
 	
 	const towers = _.filter(myStructures, (i) => i.structureType == STRUCTURE_TOWER);
 	const towersNotFull = _.filter(towers, (i) => i.energy < i.energyCapacity - 100);
-	if (towersNotFull.length > 0) {
+	if (towersNotFull.length > 0 && creep.carry[RESOURCE_ENERGY] > 0) {
 	    const o = creep.pos.findClosestByRange(towersNotFull);
 		err = creep.transfer(o, RESOURCE_ENERGY);
 		if (err == ERR_NOT_IN_RANGE) {
