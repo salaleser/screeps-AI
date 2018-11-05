@@ -46,12 +46,13 @@ var tower = { run: function(spawn) {
 		const containers = _.filter(myStructures, (i) => i.structureType == STRUCTURE_CONTAINER);
 		const brokenContainers = _.filter(containers, (i) => i.hits < i.hitsMax);
 		const brokenStructures = _.filter(structures, (i) => i.hits < i.hitsMax);
-		const brokenStructuresFilteredByHits = _.filter(brokenStructures, (i) => i.hits < 25000);
- 		const brokenStructuresSortedByHits = brokenStructuresFilteredByHits.sort((a,b) => a.hits - b.hits);
+		const hitsLimit = 23^spawn.room.controller.level + 10000;
+		const filteredByHits = _.filter(brokenStructures, (i) => i.hits < hitsLimit);
+ 		const sortedByHits = filteredByHits.sort((a,b) => a.hits - b.hits);
 		if (brokenContainers.length > 0) {
 			target = brokenContainers[0];
-		} else if (brokenStructuresSortedByHits.length > 0) {
-		    target = brokenStructuresSortedByHits[0];
+		} else if (sortedByHits.length > 0) {
+		    target = sortedByHits[0];
 		}
 		if (target) {
 			err = tower.repair(target);

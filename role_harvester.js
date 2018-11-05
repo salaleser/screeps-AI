@@ -5,14 +5,6 @@ var err;
 
 var role_harvester = { run: function(spawn, creep) {
 
-	const pickupStyle = { visualizePathStyle: {
-		fill: 'transparent',
-		stroke: '#00f',
-		lineStyle: 'dashed',
-		strokeWidth: 0.1,
-		opacity: 0.4,
-	} };
-	
 	const harvestStyle = { visualizePathStyle: {
 		fill: 'transparent',
 		stroke: '#0ff',
@@ -40,7 +32,7 @@ var role_harvester = { run: function(spawn, creep) {
 				for (const resourceType in creep.carry) {
 					err = creep.transfer(container, resourceType);
 					if (err == ERR_NOT_IN_RANGE) {
-						creep.moveTo(container, transferStyle);
+						creep.moveTo(container, harvestStyle);
 					}
 				}
 				return;

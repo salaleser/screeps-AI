@@ -337,20 +337,38 @@ var spawner = { run: function(spawn, level) {
         return;
     }
     
-    const sources = spawn.room.find(FIND_SOURCES);
-    const minerals = spawn.room.find(FIND_MINERALS);
-    let sourcesArray = [sources[0], sources[1], minerals[0]];
-    if (sources.length < 2) {
-        sourcesArray = [sources[0], minerals[0]];
+    if (role == 'harvester') {
+        const sources    = spawn.room.find(FIND_SOURCES);
+        const minerals   = spawn.room.find(FIND_MINERALS);
+        const structures = spawn.room.find(FIND_STRUCTURES);
+        const extractors = _.filter(structures, (i) => i.structureType == STRUCTURE_EXTRACTOR);
+
+        const harvesters     = _.filter(Game.creeps, (i) => i.memory.spawn == spawn.name && i.memory.role == 'harvester');
+        const isSource1Free  = _.filter(harvesters, (i) => i.memory.source == sources[0].id).length == 0;
+        const isSource2Free  = _.filter(harvesters, (i) => i.memory.source == sources[1].id).length == 0;
+        const isMineral1Free = _.filter(harvesters, (i) => i.memory.source == minerals[0].id).length == 0;
+        
+        let sourceID = sources[0].id;
+        if (isSource1Free) {
+            sourceID = sources[0].id;
+        } else if (isSource2Free) {
+            sourceID = sources[1].id;
+        } else if (isMineral1Free && extractors.length > 0) {
+            sourceID = minerals[0].id;
+        }
+
+        opts = { memory: {
+            role:   role,
+            spawn:  spawn.name,
+            source: sourceID,
+        } };
+    } else {
+        opts = { memory: {
+            role:  role,
+            spawn: spawn.name,
+        } };
     }
     
-    let source = sourcesArray[spawn.memory.counts.harvesters.length].id;
-    let opts = { memory: {
-        role:   role,
-        spawn:  spawn.name,
-        source: source,
-    } };
-
     err = spawn.spawnCreep(body, Game.time, opts);
     if (err == ERR_BUSY || err == ERR_NOT_ENOUGH_ENERGY || err == ERR_NAME_EXISTS) {
         return;
