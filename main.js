@@ -3,6 +3,7 @@ var tower     = require('tower');
 var roles     = require('roles');
 var construct = require('construct');
 var spawner   = require('spawner');
+var mailer    = require('mailer');
 
 module.exports.loop = function () {
 	'use strict';
@@ -56,20 +57,22 @@ module.exports.loop = function () {
 		const allSites   = Game.constructionSites;
 		const storage    = spawn.room.storage;
 		const sources    = spawn.room.find(FIND_SOURCES);
+		const minerals   = spawn.room.find(FIND_MINERALS);
 		const structures = spawn.room.find(FIND_STRUCTURES);
 		const sites      = spawn.room.find(FIND_MY_CONSTRUCTION_SITES);
 		const containers = _.filter(structures, (i) => i.structureType == STRUCTURE_CONTAINER);
 		const extractor  = _.filter(structures, (i) => i.structureType == STRUCTURE_EXTRACTOR);
 		
+		// FIXME Get initial controller level from CONTROLLER_STRUCTURES constant
 		m.limits.harvesters += sources.length;
-		if (extractor.length > 0) {
+		if (level > 6 && extractor.length > 0 && minerals[0].mineralAmount > 0) {
 			m.limits.harvesters++;
 		}
 
 		if (storage) {
 			m.limits.upgraders += parseInt(storage.store[RESOURCE_ENERGY] / 4000);
-			if (m.limits.upgraders > 5) {
-				m.limits.upgraders = 5;
+			if (m.limits.upgraders > 3) {
+				m.limits.upgraders = 3;
 			}
 		} else {
 			m.limits.upgraders += level;
@@ -121,6 +124,8 @@ module.exports.loop = function () {
 		visuals.run(spawn, level);
 
 		construct.run(spawn);
+		
+		mailer.run(spawn);
 	}
 	
 	// const linkFrom = Game.rooms['W3S9'].lookForAt('structure', 39, 44)[0];
@@ -133,4 +138,5 @@ module.exports.loop = function () {
 			delete Memory.creeps[name];
 		}
 	}
+	
 }

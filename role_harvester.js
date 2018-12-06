@@ -1,5 +1,6 @@
 var harvest = require('harvest');
 var unload  = require('unload');
+var logger  = require('logger');
 
 var err;
 
@@ -42,20 +43,34 @@ var role_harvester = { run: function(spawn, creep) {
 		return;
 	}
 	
-	if (spawn.memory.counts.harvesters > 1) {
-	    for (let f in Game.flags) {
-    		let flag = Game.flags[f];
-    		if (flag.color == COLOR_YELLOW) {
-    			creep.moveTo(flag, harvestStyle);
-    			return;
-    		}
-    	}
-	}
+	// if (spawn.memory.counts.harvesters > 1) {
+	//     for (let f in Game.flags) {
+    // 		let flag = Game.flags[f];
+    // 		if (flag.color == COLOR_YELLOW) {
+    // 			creep.moveTo(flag, harvestStyle);
+    // 			return;
+    // 		}
+    // 	}
+	// }
 	
     const source = Game.getObjectById(creep.memory.source);
 	err = creep.harvest(source);
-	if (err == ERR_NOT_IN_RANGE) {
-		err = creep.moveTo(source, harvestStyle);
+	switch(err) {
+    	case OK:
+    	case ERR_NOT_ENOUGH_ENERGY:
+    	case ERR_BUSY:
+    	    break;
+        case ERR_NOT_IN_RANGE:
+            err = creep.moveTo(source, harvestStyle);
+            break;
+        case ERR_RCL_NOT_ENOUGH:
+            const source0id = spawn.room.find(FIND_SOURCES)[0].id;
+    		if (creep.memory.source != source0id) {
+    		    creep.memory.source = source0id;
+    		}
+    		break;
+    	default:
+    	    logger.error(err, 'harvest', 'role_harvester: ' + creep.name + '.harvest(' + source.pos + ')');
 	}
 
 }};

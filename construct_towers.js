@@ -11,11 +11,11 @@ var construct_towers= { run: function(spawn) {
 	// const towers = _.filter(myStructures, (i) => i.structureType == STRUCTURE_TOWER);
 	err = spawn.room.createConstructionSite(spawn.pos.x - 1, spawn.pos.y, STRUCTURE_TOWER);
 	if (err != OK && err == ERR_INVALID_TARGET) {
-	    logger.error(err, spawn.name + '.construct_towers.1')
+	    logger.error(err, 'createConstructionSite', spawn.name + '.construct_tower_1')
 	}
 	err = spawn.room.createConstructionSite(spawn.pos.x + 1, spawn.pos.y, STRUCTURE_TOWER);
 	if (err != OK && err == ERR_INVALID_TARGET) {
-	    logger.error(err, spawn.name + '.construct_towers.2')
+	    logger.error(err, 'createConstructionSite', spawn.name + '.construct_tower_2')
 	}
 	
 }};

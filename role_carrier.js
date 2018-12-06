@@ -29,15 +29,18 @@ var role_carrier = { run: function(spawn, creep) {
 		unload.run(spawn, creep);
 		return;
 	} else {
-        let dropped = spawn.room.find(FIND_DROPPED_RESOURCES);
-        if (dropped.length > 0) {
-            err = creep.pickup(dropped[0]);
-            if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(dropped[0], pickupStyle);
-            }
-            return;
-		}
-		
+	    const storage = creep.room.storage;
+	    if (storage) {
+	        let dropped = spawn.room.find(FIND_DROPPED_RESOURCES);
+            if (dropped.length > 0) {
+                err = creep.pickup(dropped[0]);
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(dropped[0], pickupStyle);
+                }
+                return;
+    		}
+	    }
+        
 		const tombstones = spawn.room.find(FIND_TOMBSTONES);
 		const tombstonesWithResources = _.filter(tombstones, (i) => _.sum(i.store) > 0);
 		if (tombstonesWithResources.length > 0) {

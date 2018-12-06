@@ -20,8 +20,8 @@ var construct_extractor= { run: function(spawn) {
 	err = spawn.room.createConstructionSite(pos.x, pos.y, STRUCTURE_EXTRACTOR);
 	if (err == ERR_RCL_NOT_ENOUGH) {
 		return;
-	} else if (err != OK) {
-	    logger.error(err, spawn.name + '.construct_extractor(' + pos.x + ', ' + pos.y + ')');
+	} else {
+	    logger.error(err, 'createConstructionSite', spawn.name + '.construct_extractor(' + pos.x + ', ' + pos.y + ')');
 	}
 	
 }};

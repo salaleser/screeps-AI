@@ -72,8 +72,7 @@ var construct_extensions = { run: function(spawn) {
 		err = spawn.room.createConstructionSite(x, y, STRUCTURE_EXTENSION);
 		if (err == ERR_RCL_NOT_ENOUGH) {
 			break;
-		}
-		if (err == ERR_INVALID_TARGET) {
+		} else if (err == ERR_INVALID_TARGET) {
 			if (i > 0 && i % 4 == 0) {
 				offsetX++;
 				if (offsetY % 2 == 0) {
@@ -85,9 +84,8 @@ var construct_extensions = { run: function(spawn) {
 				offsetY += 2;
 			}
 			continue;
-		}
-		if (err != OK) {
-			logger.error(err, spawn.name + '.construct_extensions(' + x + ', ' + y + ')');
+		} else {
+			logger.error(err, 'createConstructionSite', spawn.name + '.construct_extensions(' + x + ', ' + y + ')');
 		}
 	}
 

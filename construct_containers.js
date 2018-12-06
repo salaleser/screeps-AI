@@ -38,8 +38,8 @@ var construct_containers= { run: function(spawn) {
 			err = spawn.room.createConstructionSite(pos.x, pos.y, STRUCTURE_CONTAINER);
 			if (err == ERR_RCL_NOT_ENOUGH) {
 				return;
-			} else if (err != OK) {
-				logger.error(err, spawn.name +
+			} else {
+				logger.error(err, 'createConstructionSite', spawn.name +
 					'.construct_containers(' + pos.x + ', ' + pos.y + ')')
 			}
 		}

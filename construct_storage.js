@@ -2,7 +2,7 @@ var logger = require('logger');
 
 var err;
 
-var construct_storage= { run: function(spawn) {
+var construct_storage = { run: function(spawn) {
     
     if (spawn.room.controller.level < 4) {
 		return;
@@ -12,9 +12,15 @@ var construct_storage= { run: function(spawn) {
 		return;
 	}
 	
-	const path = spawn.room.memory.pathController.path;
-	if (!path) {
+	const pathController = spawn.room.memory.pathController;
+	if (!pathController) {
 		return;
+	}
+	
+	const path = pathController.path;
+	if (!path) {
+	    console.log('construct_storage: "No pathController.path"', spawn.name, pathController);
+	    return;
 	}
 
 	let offset = 2;
@@ -28,8 +34,8 @@ var construct_storage= { run: function(spawn) {
 		err = spawn.room.createConstructionSite(pos.x - 1, pos.y, STRUCTURE_STORAGE);
 	} else if (err == ERR_RCL_NOT_ENOUGH) {
 		return;
-	} else if (err != OK) {
-	    logger.error(err, spawn.name + '.construct_storage(' + pos.x + ', ' + pos.y + ')');
+	} else {
+	    logger.error(err, 'createConstructionSite', spawn.name + '.construct_storage(' + pos.x + ', ' + pos.y + ')');
 	}
 	
 }};

@@ -11,7 +11,7 @@ var role_upgrader = { run: function(spawn, creep) {
 	}
 
 	if (creep.memory.full) {
-	    const controller = creep.room.controller;
+	    const controller = spawn.room.controller;
 	    let err = creep.upgradeController(controller);
 		if (err == ERR_NOT_IN_RANGE) {
 			err = creep.moveTo(controller);

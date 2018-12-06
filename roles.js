@@ -16,33 +16,28 @@ var roles = { run: function(spawn) {
 		}
 
 		const role = creep.memory.role;
-		
-		if (role == 'harvester') {
-		    role_harvester.run(spawn, creep);
-		}
-		
-		if (role == 'builder') {
-		    role_builder.run(spawn, creep);
-		}
-		
-		if (role == 'upgrader') {
-		    role_upgrader.run(spawn, creep);
-		}
-		
-		if (role == 'carrier') {
-			role_carrier.run(spawn, creep);
-		}
-		
-		if (role == 'attacker') {
-		    role_attacker.run(spawn, creep);
-		}
-		
-		if (role == 'claimer') {
-		    role_claimer.run(spawn, creep);
-		}
-
-		if (role == 'healer') {
-		    role_healer.run(spawn, creep);
+		switch(creep.memory.role) {
+        case 'harvester':
+            role_harvester.run(spawn, creep);
+            break;
+        case 'builder':
+            role_builder.run(spawn, creep);
+            break;
+        case 'upgrader':
+            role_upgrader.run(spawn, creep);
+            break;
+        case 'carrier':
+            role_carrier.run(spawn, creep);
+            break;
+        case 'attacker':
+            role_attacker.run(spawn, creep);
+            break;
+        case 'claimer':
+            role_claimer.run(spawn, creep);
+            break;
+        case 'healer':
+            role_healer.run(spawn, creep);
+            break;
 		}
 	}
 	

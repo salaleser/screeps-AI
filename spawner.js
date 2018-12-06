@@ -4,7 +4,7 @@ var err;
 
 var spawner = { run: function(spawn, level) {
     
-    if (Game.time % 20 != 0) {
+    if (Game.time % 10 != 0) {
         return;
     }
 
@@ -345,7 +345,10 @@ var spawner = { run: function(spawn, level) {
 
         const harvesters     = _.filter(Game.creeps, (i) => i.memory.spawn == spawn.name && i.memory.role == 'harvester');
         const isSource1Free  = _.filter(harvesters, (i) => i.memory.source == sources[0].id).length == 0;
-        const isSource2Free  = _.filter(harvesters, (i) => i.memory.source == sources[1].id).length == 0;
+        let isSource2Free = false;
+        if (sources.length > 1) {
+            isSource2Free  = _.filter(harvesters, (i) => i.memory.source == sources[1].id).length == 0;
+        }
         const isMineral1Free = _.filter(harvesters, (i) => i.memory.source == minerals[0].id).length == 0;
         
         let sourceID = sources[0].id;
@@ -372,9 +375,8 @@ var spawner = { run: function(spawn, level) {
     err = spawn.spawnCreep(body, Game.time, opts);
     if (err == ERR_BUSY || err == ERR_NOT_ENOUGH_ENERGY || err == ERR_NAME_EXISTS) {
         return;
-    }
-    if (err != OK) {
-        logger.error(err, spawn.name + '.spawner.spawnCreep: ' + role);
+    } else {
+        logger.error(err, 'spawnCreep', spawn.name + '.spawnCreep(' + role + ')');
     }
 
 }};

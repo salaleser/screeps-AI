@@ -59,6 +59,17 @@ var role_attacker = { run: function(spawn, creep) {
 		}
 	}
 	
+// 	const structures = spawn.room.find(FIND_STRUCTURES);
+// 	const spawns = _.filter(structures, (i) => i.structureType == STRUCTURE_SPAWN);
+// 	if (spawns.length > 0) {
+// 	    const o = Game.getObjectById('5bce18644bdebe4234b43947');
+// 	    err = creep.attack(o);
+// 	    console.log(creep.room.name, spawns[0].pos)
+// 	    if (err == ERR_NOT_IN_RANGE) {
+// 	    	err = creep.moveTo(o, attackStyle);
+// 	    }
+// 	}
+	
 }};
 
 module.exports = role_attacker;

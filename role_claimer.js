@@ -26,8 +26,7 @@ var role_claimer = { run: function(spawn, creep) {
 		err = creep.claimController(controller);
 		if (err == OK) {
 			console.log(creep.name + ': "Controller at ' + creep.room.name + ' claimed!"');
-		}
-		if (err == ERR_GCL_NOT_ENOUGH) {
+		} else if (err == ERR_GCL_NOT_ENOUGH) {
 			if (controller.sign) {
 				if (controller.sign.text != signText) {
 					err = creep.signController(controller, signText);
@@ -47,11 +46,10 @@ var role_claimer = { run: function(spawn, creep) {
 			if (err == ERR_INVALID_TARGET) {
 				err = creep.attackController(controller);
 			}
-		}
-		if (err == ERR_NOT_IN_RANGE) {
+		} else if (err == ERR_NOT_IN_RANGE) {
 			creep.moveTo(controller, claimStyle);
-		} else if (err != OK) {
-			logger.error(err, creep.room.name + '.role_claimer:45')
+		} else {
+			logger.error(err, 'claimController', creep.room.name + '.claimController()')
 		}
 		return;
 	} else {
